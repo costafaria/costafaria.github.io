@@ -303,6 +303,11 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
 .gal-pt[aria-current="true"]::before{background:var(--areia);transform:scale(1.3)}
 .gal-n{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:3;background:rgba(14,32,24,.7);color:var(--creme);font-size:.74rem;letter-spacing:.08em;padding:5px 14px;border-radius:999px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .gal-n b{color:var(--areia);font-weight:600}
+.gal-n{display:flex;gap:10px;align-items:center;white-space:nowrap;max-width:calc(100% - 28px)}
+.gal-n #galT{overflow:hidden;text-overflow:ellipsis;font-weight:600;letter-spacing:.02em}
+.gal-n #galT::after{content:"·";margin-left:10px;color:var(--areia)}
+.ficha-foto.inteira.clara{background:#fff}
+.ficha-foto.clara .gal-n{background:rgba(14,32,24,.88)}
 .ficha-foto.inteira{background:var(--noite)}
 .ficha-foto.inteira img.f{object-fit:contain}
 .ficha-foto.inteira::after{display:none}
@@ -535,9 +540,10 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
   var FABRICAS=[
     {id:'fgv',nome:'FGVTN',cat:'Ferragens',cats:['Ferragens'],logo:'cf-logo-fgv.svg',lw:'50%',site:'https://fgvtn.com.br',
      desc:'Corrediças, dobradiças de embutir, gavetas metálicas Cervino, acessórios Liv para cozinha, sistemas deslizantes e parafusos TN.',
-     prod:['Corrediças','Dobradiças de embutir','Gavetas metálicas Cervino','Acessórios Liv para cozinha','Sistemas deslizantes','Parafusos TN'],
-     chaves:'ferragem ferragens fgv tn ten corredica telescopica dobradica gaveta cervino liv lixeira porta-tempero canto articulado deslizante porta de correr parafuso chipboard fixacao',
+     prod:['Dobradiças Click, inclusive inox TN','Corrediças telescópicas e ocultas','Gavetas metálicas Cervino e AvantBox','Lixeiras embutidas Liv','Articulador Slow Multi','Linha Aero para portas basculantes','Acessórios Liv para cozinha','Sistemas deslizantes','Parafusos TN'],
+     chaves:'ferragem ferragens fgv tn ten aeroflex aeromax aeroplus avantbox unihide corredica telescopica dobradica gaveta cervino liv lixeira porta-tempero canto articulado deslizante porta de correr parafuso chipboard fixacao',
      foto:'cf-foto-fgv.jpg',alt:'Gaveta metálica Cervino instalada em módulo de cozinha',
+     inteira:true,clara:true,legenda:true,fotos:[['cf-fgv-01.jpg','Gaveta Cervino'],['cf-fgv-02.jpg','Dobradiça TN Click Slow Inox'],['cf-fgv-03.jpg','Gaveta metálica AvantBox'],['cf-fgv-04.jpg','Gaveta metálica Cervino'],['cf-fgv-05.jpg','Lixeira embutida Liv'],['cf-fgv-06.jpg','Corrediça oculta Slowmotion'],['cf-fgv-07.jpg','Corrediça oculta UniHide'],['cf-fgv-08.jpg','Articulador Slow Multi'],['cf-fgv-09.jpg','Articulador Slow Multi'],['cf-fgv-10.jpg','Aeroflex'],['cf-fgv-11.jpg','Aeromax Slow'],['cf-fgv-12.jpg','Aeroplus']],
      cats_pdf:[['Guia de Produtos 2026','cat-fgv-guia-de-produtos-2026.pdf','6,6 MB'],['Lançamentos 2026','cat-fgv-lancamentos-2026.pdf','2,6 MB']]},
     {id:'kisafix',nome:'Kisafix',cat:'Colas e químicos',cats:['Colas e químicos'],logo:'cf-logo-kisafix.png',lw:'74%',site:'https://kisafix.com',
      desc:'Adesivos de contato, PVA, hot melt, instantâneo Kisabond, silicones e selantes do Grupo Killing, além de thinners e limpadores.',
@@ -646,9 +652,10 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
     var n=gal.fotos.length;gal.i=(i+n)%n;
     var im=$('.ficha-foto img.f',din);if(!im)return;
     im.style.opacity=0;
-    var nx=new Image();nx.onload=function(){im.src=nx.src;im.alt=gal.fotos[gal.i][1];im.style.opacity=1};nx.src=gal.fotos[gal.i][0];
+    var alvo=gal.i,nx=new Image();nx.onload=function(){if(alvo!==gal.i)return;im.src=nx.src;im.alt=gal.fotos[alvo][1];im.style.opacity=1};nx.src=gal.fotos[alvo][0];
     din.querySelectorAll('.gal-pt').forEach(function(p,k){p.setAttribute('aria-current',k===gal.i)});
     var gn=$('#galN',din);if(gn)gn.textContent=gal.i+1;
+    var gt=$('#galT',din);if(gt)gt.textContent=gal.fotos[gal.i][1];
     var pre=new Image();pre.src=gal.fotos[(gal.i+1)%n][0];
   }
   function abre(id){
@@ -656,11 +663,11 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
     gal.fotos=f.fotos||[[f.foto,f.alt]];gal.i=0;
     var topo=f.direto?'<span class="nome-serif">Costa Faria Ribeiro</span>':'<img class="lg" src="'+f.logo+'" alt="Logo '+esc(f.nome)+'">';
     var nav=gal.fotos.length>1?('<button class="gal-b gal-ant" type="button" aria-label="Foto anterior">‹</button><button class="gal-b gal-prox" type="button" aria-label="Próxima foto">›</button>'+
-      (gal.fotos.length>6?'<div class="gal-n" aria-live="polite"><b id="galN">1</b> / '+gal.fotos.length+'</div>':
+      (gal.fotos.length>6?'<div class="gal-n" aria-live="polite">'+(f.legenda?'<span id="galT">'+esc(gal.fotos[0][1])+'</span>':'')+'<span><b id="galN">1</b> / '+gal.fotos.length+'</span></div>':
       '<div class="gal-pts">'+gal.fotos.map(function(_,k){return '<button class="gal-pt" type="button" data-k="'+k+'" aria-label="Foto '+(k+1)+' de '+gal.fotos.length+'" aria-current="'+(k===0)+'"></button>'}).join('')+'</div>')):'';
     var pdfs=f.cats_pdf?('<h4>Catálogos</h4><div class="pdfs">'+f.cats_pdf.map(function(c){
       return '<a class="pdf" href="'+c[1]+'" target="_blank" rel="noopener"><span class="pdf-i" aria-hidden="true">PDF</span><span class="pdf-t"><b>'+esc(c[0])+'</b><small>Abrir catálogo · '+c[2]+'</small></span><span class="pdf-s" aria-hidden="true">↓</span></a>'}).join('')+'</div>'):'';
-    din.innerHTML='<div class="ficha-foto'+(f.inteira?' inteira':'')+'" style="--lw:'+(f.lw||'70%')+'"><img class="f" src="'+gal.fotos[0][0]+'" alt="'+esc(gal.fotos[0][1])+'">'+topo+nav+'</div>'+
+    din.innerHTML='<div class="ficha-foto'+(f.inteira?' inteira':'')+(f.clara?' clara':'')+'" style="--lw:'+(f.lw||'70%')+'"><img class="f" src="'+gal.fotos[0][0]+'" alt="'+esc(gal.fotos[0][1])+'">'+topo+nav+'</div>'+
       '<div class="ficha-txt"><span class="cat">'+esc(f.cats.join(' · '))+'</span><h3 id="fichaNome">'+esc(f.nome)+'</h3>'+
       '<p class="desc">'+esc(f.desc)+'</p><h4>Produtos</h4><div class="tags">'+f.prod.map(function(p){return '<span class="tag">'+esc(p)+'</span>'}).join('')+'</div>'+pdfs+
       '<div class="ficha-acoes"><a class="btn btn-tinta" target="_blank" rel="noopener" href="'+zapLink(f)+'">Pedir orçamento</a>'+
