@@ -124,7 +124,7 @@ p{margin:0}
 @media(max-width:1180px){.fab{flex-basis:calc((100% - 36px)/4);height:150px}}
 @media(max-width:640px){
   .hero{padding:86px 0 48px}
-  .hero-txt .rotulo{font-size:.57rem;letter-spacing:.12em;white-space:nowrap}
+  .hero-txt .rotulo{font-size:.57rem;letter-spacing:.12em;text-wrap:balance}
   .hero .rotulo{font-size:.6rem;letter-spacing:.17em}
   .hero h1{margin:12px 0 12px}
   .hero .sub{font-size:.95rem;line-height:1.6}
@@ -134,9 +134,19 @@ p{margin:0}
   .fab .logo img{max-height:40px;width:calc(var(--lw,70%) * .9)}
   .fab:last-child{flex-basis:100%}
   .fab:last-child .logo img{width:calc(var(--lw,70%) * .5)}
-  .fab .cat{font-size:.56rem;letter-spacing:.16em}
+  .fab .cat{font-size:.56rem;letter-spacing:.14em;white-space:normal;line-height:1.3}
   .hero-pe{margin-top:26px}
   .hero-pe .btn{flex:1 1 100%}
+}
+
+@media(max-width:350px){
+  .marca{gap:9px}
+  .marca b{font-size:.9rem}
+  .marca small{font-size:.5rem;letter-spacing:.26em}
+  .menu-btn{width:40px;height:40px}
+  .fab{height:98px}
+  .fab .cat{font-size:.5rem;letter-spacing:.1em}
+  .hero h1{font-size:1.9rem}
 }
 
 /* ---------- seções ---------- */
