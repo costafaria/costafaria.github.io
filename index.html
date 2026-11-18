@@ -168,7 +168,7 @@ section{padding:112px 0}
 .busca .limpar{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:0;background:transparent;font-size:1.3rem;line-height:1;color:var(--suave);display:none}
 .busca .limpar:hover{background:var(--creme);color:var(--tinta)}
 .busca.tem .limpar{display:block}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0}
 .chip{border:1px solid var(--linha-clara);background:transparent;border-radius:999px;padding:9px 18px;font-size:.8rem;font-weight:500;color:var(--texto);white-space:nowrap;transition:background .25s,color .25s,border-color .25s}
 .chip:hover{border-color:var(--tinta);color:var(--tinta)}
 .chip[aria-pressed="true"]{background:var(--verde);border-color:var(--verde);color:var(--creme)}
@@ -293,6 +293,24 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
   .ficha-txt h3{font-size:1.8rem}
 }
 
+.ficha-foto img.f{transition:opacity .35s ease}
+.gal-b{position:absolute;top:50%;z-index:3;width:42px;height:42px;margin-top:-21px;border-radius:50%;border:1px solid rgba(245,240,232,.5);background:rgba(14,32,24,.45);color:var(--creme);font-size:1.5rem;line-height:1;display:grid;place-items:center;padding:0 0 3px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s,border-color .25s}
+.gal-b:hover{background:rgba(14,32,24,.8);border-color:var(--areia)}
+.gal-ant{left:14px}.gal-prox{right:14px}
+.gal-pts{position:absolute;left:0;right:0;bottom:16px;z-index:3;display:flex;justify-content:center;gap:8px}
+.gal-pt{width:26px;height:26px;border:0;background:none;padding:0;display:grid;place-items:center}
+.gal-pt::before{content:"";width:8px;height:8px;border-radius:50%;background:rgba(245,240,232,.5);box-shadow:0 0 0 1px rgba(14,32,24,.25);transition:background .25s,transform .25s}
+.gal-pt[aria-current="true"]::before{background:var(--areia);transform:scale(1.3)}
+.pdfs{display:grid;gap:8px}
+.pdf{display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid var(--linha-clara);border-radius:4px;text-decoration:none;background:#fff;transition:border-color .25s,transform .3s var(--ease)}
+.pdf:hover{border-color:var(--areia-2);transform:translateX(3px)}
+.pdf-i{flex:none;width:40px;height:40px;border-radius:3px;background:var(--verde);color:var(--areia);font-size:.6rem;font-weight:600;letter-spacing:.1em;display:grid;place-items:center}
+.pdf-t{flex:1;min-width:0;line-height:1.35}
+.pdf-t b{display:block;font-weight:600;font-size:.92rem;color:var(--tinta)}
+.pdf-t small{font-size:.76rem;color:var(--suave)}
+.pdf-s{color:var(--areia-2);font-size:1.1rem}
+@media(max-width:760px){.ficha-foto{height:240px!important}.gal-b{width:38px;height:38px;margin-top:-19px}}
+
 /* ---------- whatsapp ---------- */
 .zap{position:fixed;right:22px;bottom:22px;z-index:70;background:#1FA855;color:#fff;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.26);text-decoration:none;transition:transform .3s var(--ease)}
 .zap:hover{transform:scale(1.06)}
@@ -309,7 +327,7 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
 </style>
 </head>
 <body id="topo">
-<a class="pular" href="#encontre">Ir para a busca de produtos</a>
+<a class="pular" href="#encontre">Ir para as fábricas por categoria</a>
 
 <header class="topo" id="cab">
   <div class="wrap topo-in">
@@ -349,14 +367,9 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
 <section class="encontre" id="encontre">
   <div class="wrap">
     <div class="cab rev">
-      <p class="rotulo">Busca por produto</p>
+      <p class="rotulo">Por categoria</p>
       <h2>Encontre o que você precisa.</h2>
-      <p>Digite um produto ou escolha uma categoria para ver qual fábrica atende.</p>
-    </div>
-    <div class="busca rev" id="buscaBox">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6" stroke-linecap="round"/></svg>
-      <input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="Ex.: corrediça, cola de contato, puxador…" aria-label="Buscar por produto ou fábrica">
-      <button class="limpar" id="limpar" type="button" aria-label="Limpar busca">×</button>
+      <p>Escolha uma categoria para ver qual fábrica atende.</p>
     </div>
     <div class="chips rev" id="chips" role="group" aria-label="Filtrar por categoria"></div>
     <p class="contagem" id="contagem" aria-live="polite"></p>
@@ -518,22 +531,28 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
      desc:'Corrediças, dobradiças de embutir, gavetas metálicas Cervino, acessórios Liv para cozinha, sistemas deslizantes e parafusos TN.',
      prod:['Corrediças','Dobradiças de embutir','Gavetas metálicas Cervino','Acessórios Liv para cozinha','Sistemas deslizantes','Parafusos TN'],
      chaves:'ferragem ferragens fgv tn ten corredica telescopica dobradica gaveta cervino liv lixeira porta-tempero canto articulado deslizante porta de correr parafuso chipboard fixacao',
-     foto:'cf-foto-fgv.jpg',alt:'Gaveta metálica Cervino instalada em módulo de cozinha'},
+     foto:'cf-foto-fgv.jpg',alt:'Gaveta metálica Cervino instalada em módulo de cozinha',
+     cats_pdf:[['Guia de Produtos 2026','cat-fgv-guia-de-produtos-2026.pdf','6,6 MB'],['Lançamentos 2026','cat-fgv-lancamentos-2026.pdf','2,6 MB']]},
     {id:'kisafix',nome:'Kisafix',cat:'Colas e químicos',cats:['Colas e químicos'],logo:'cf-logo-kisafix.png',lw:'74%',site:'https://kisafix.com',
      desc:'Adesivos de contato, PVA, hot melt, instantâneo Kisabond, silicones e selantes do Grupo Killing, além de thinners e limpadores.',
      prod:['Adesivo de contato','Cola PVA','Hot melt','Instantâneo Kisabond','Silicones','Selantes','Thinners','Limpadores'],
      chaves:'cola colas adesivo adesivos quimico quimicos killing kisabond contato pva branca hot melt instantaneo instantanea silicone selante thinner limpador spray',
-     foto:'cf-foto-kisafix.jpg',alt:'Linha de adesivos de contato Kisafix'},
+     foto:'cf-foto-kisafix.jpg',alt:'Linha de adesivos de contato Kisafix',
+     fotos:[['cf-foto-kisafix.jpg','Linha de adesivos de contato Kisafix'],['cf-foto-kisafix-2.jpg','Adesivo de contato Kisafix em bisnaga'],['cf-foto-kisafix-3.jpg','Adesivo instantâneo Kisabond'],['cf-foto-kisafix-4.jpg','Kit MDF Kisafix para colagem de madeira e MDF']],
+     cats_pdf:[['Construção Civil 2026','cat-kisafix-construcao-civil-2026.pdf','6,0 MB']]},
     {id:'fibraplac',nome:'Fibraplac',cat:'MDF',cats:['MDF'],logo:'cf-logo-fibraplac.png',lw:'78%',site:'https://www.fibraplac.com.br',
      desc:'Painéis de MDF em padrões amadeirados, unicolores e pedras, incluindo o Fibra Mais para ambientes com exposição à umidade.',
      prod:['MDF amadeirado','MDF unicolor','Padrões pedra','Fibra Mais (umidade)'],
      chaves:'mdf painel paineis chapa chapas amadeirado unicolor cor solida pedra fibra mais umidade resistente branco cru revestido',
-     foto:'cf-foto-fibraplac.jpg',alt:'Cozinha planejada com painéis de MDF Fibraplac'},
+     foto:'cf-foto-fibraplac.jpg',alt:'Cozinha planejada com painéis de MDF Fibraplac',
+     cats_pdf:[['Pasta de Padrões 2026','cat-fibraplac-pasta-de-padroes-2026.pdf','3,2 MB']]},
     {id:'karikal',nome:'Karikal',cat:'Laminados',cats:['Laminados'],logo:'cf-logo-karikal.png',lw:'50%',site:'https://karikal.com.br',
      desc:'Laminado decorativo de alta pressão, painéis KariBoard e KariPainel, painel ripado e MDF canaletado.',
      prod:['Laminado de alta pressão','KariBoard','KariPainel','Painel ripado','MDF canaletado'],
      chaves:'laminado laminados formica revestimento alta pressao kariboard karipainel ripado canaletado painel decorativo',
-     foto:'cf-foto-karikal.jpg',alt:'Cozinha revestida em laminado decorativo Karikal'},
+     foto:'cf-foto-karikal.jpg',alt:'Cozinha revestida em laminado decorativo Karikal',
+     fotos:[['cf-foto-karikal.jpg','Cozinha revestida em laminado decorativo Karikal'],['cf-foto-karikal-2.jpg','Divisórias sanitárias em laminado amadeirado Karikal'],['cf-foto-karikal-3.jpg','Fachada revestida com painéis Karikal'],['cf-foto-karikal-4.jpg','Corredor com forro e piso em padrão amadeirado Karikal']],
+     cats_pdf:[['Cores e Acabamentos 2026','cat-karikal-cores-e-acabamentos-2026.pdf','3,1 MB']]},
     {id:'torralba',nome:'Torralba',cat:'Puxadores',cats:['Puxadores'],logo:'cf-logo-torralba.png',lw:'76%',site:'https://torralba.com.br',
      desc:'Puxadores e acessórios de acabamento em zamac, com mais de 40 opções de acabamento.',
      prod:['Puxadores em zamac','Puxadores em madeira','Acessórios de acabamento','Mais de 40 acabamentos'],
@@ -543,12 +562,15 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
      desc:'Perfis e puxadores de alumínio para móveis, incluindo perfis de acabamento para MDF canaletado.',
      prod:['Perfis de alumínio','Puxadores de alumínio','Perfil para porta de vidro','Perfil para MDF canaletado'],
      chaves:'perfil perfis aluminio puxador puxadores porta de vidro quadro canaletado anodizado pintado cabideiro acabamento',
-     foto:'cf-foto-perfinobre.jpg',alt:'Móvel com perfil de alumínio Perfinobre'},
+     foto:'cf-foto-perfinobre.jpg',alt:'Móvel com perfil de alumínio Perfinobre',
+     cats_pdf:[['Catálogo 2026/2027','cat-perfinobre-catalogo-2026-2027.pdf','8,6 MB']]},
     {id:'lamiecco',nome:'Lamiecco',cat:'Laminados',cats:['Laminados'],logo:'cf-logo-lamiecco.png',lw:'44%',site:'https://www.lamiecco.com.br',
      desc:'Laminados e revestimentos ecológicos, produzidos a partir de garrafas PET recicladas.',
      prod:['Laminados ecológicos','Revestimentos','PET reciclado'],
      chaves:'laminado laminados revestimento ecologico sustentavel pet reciclado garrafa',
-     foto:'cf-foto-lamiecco.jpg',alt:'Ambiente com revestimentos ecológicos Lamiecco'}
+     foto:'cf-foto-lamiecco.jpg',alt:'Ambiente com revestimentos ecológicos Lamiecco',
+     fotos:[['cf-foto-lamiecco.jpg','Ambiente com revestimentos ecológicos Lamiecco'],['cf-foto-lamiecco-2.jpg','Sala com parede revestida Lamiecco'],['cf-foto-lamiecco-3.jpg','Balcão de restaurante com revestimento Lamiecco'],['cf-foto-lamiecco-4.jpg','Móvel de escritório com revestimento Lamiecco']],
+     cats_pdf:[['Catálogo Revenda 2026','cat-lamiecco-revenda-2026.pdf','4,9 MB']]}
   ];
   var DIRETO={id:'madeira',direto:true,nome:'Madeira serrada',cat:'Madeira serrada',cats:['Madeira serrada'],
      desc:'Madeira serrada e beneficiada para estrutura e para itens que pedem maciço. Atendimento direto com a Costa Faria Ribeiro.',
@@ -566,7 +588,6 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
     var t=f.direto?'Olá! Vim pelo site e gostaria de consultar madeira serrada.':'Olá! Vim pelo site e gostaria de um orçamento de produtos '+f.nome+'.';
     return 'https://wa.me/'+ZAP+'?text='+encodeURIComponent(t);
   }
-  TODOS.forEach(function(f){f._txt=norm([f.nome,f.cat,f.cats.join(' '),f.desc,f.prod.join(' '),f.chaves].join(' '))});
 
   /* primeira tela */
   var grid=$('#fabGrid');
@@ -578,35 +599,18 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
   }).join('');
 
   /* busca */
-  var estado={q:'',cat:'Todas'};
-  var chips=$('#chips'),res=$('#res'),cont=$('#contagem'),q=$('#q'),box=$('#buscaBox');
+  var estado={cat:'Todas'};
+  var chips=$('#chips'),res=$('#res'),cont=$('#contagem');
   chips.innerHTML=CATS.map(function(c){return '<button class="chip" type="button" aria-pressed="'+(c==='Todas')+'" data-cat="'+esc(c)+'">'+esc(c)+'</button>'}).join('');
 
-  function filtra(){
-    var toks=norm(estado.q).split(/[^a-z0-9]+/).filter(function(t){return t.length>1}).map(raiz);
-    var lista=TODOS.filter(function(f){
-      if(estado.cat!=='Todas'&&f.cats.indexOf(estado.cat)<0)return false;
-      if(f.direto&&estado.cat==='Todas'&&!toks.length)return false;
-      return toks.every(function(t){return f._txt.indexOf(t)>=0});
-    });
-    return {lista:lista,toks:toks};
-  }
   function render(){
-    var r=filtra(),l=r.lista,toks=r.toks;
-    box.classList.toggle('tem',!!estado.q);
-    if(!l.length){
-      cont.textContent='';
-      res.innerHTML='<div class="vazio"><h3>Não encontramos esse item por aqui.</h3><p>Isso não quer dizer que não temos. Mande a sua lista e a gente confirma direto com a fábrica.</p>'+
-        '<a class="btn btn-tinta" target="_blank" rel="noopener" href="https://wa.me/'+ZAP+'?text='+encodeURIComponent('Olá! Vim pelo site e estou procurando: '+(estado.q||estado.cat))+'">Perguntar no WhatsApp</a></div>';
-      return;
-    }
-    var filtrando=toks.length||estado.cat!=='Todas';
-    cont.textContent=filtrando?(l.length===1?'1 resultado':l.length+' resultados'):'Sete fábricas representadas';
+    var l=TODOS.filter(function(f){
+      if(estado.cat==='Todas')return !f.direto;
+      return f.cats.indexOf(estado.cat)>=0;
+    });
+    cont.textContent=estado.cat==='Todas'?'Sete fábricas representadas':(l.length===1?'1 resultado':l.length+' resultados');
     res.innerHTML=l.map(function(f){
-      var tags=f.prod.map(function(p){
-        var np=norm(p),hit=toks.some(function(t){return np.indexOf(t)>=0});
-        return '<span class="tag'+(hit?' hit':'')+'">'+esc(p)+'</span>';
-      }).join('');
+      var tags=f.prod.map(function(p){return '<span class="tag">'+esc(p)+'</span>'}).join('');
       var placa=f.direto?'<span class="nome-serif">Costa Faria Ribeiro</span>':'<img src="'+f.logo+'" alt="Logo '+esc(f.nome)+'" loading="lazy">';
       return '<button class="card" type="button" data-id="'+f.id+'" style="--lw:'+(f.lw||'70%')+'">'+
         '<span class="placa">'+placa+'</span>'+
@@ -620,13 +624,10 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
     chips.querySelectorAll('.chip').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.cat===c)});
     render();
   }
-  q.addEventListener('input',function(){estado.q=q.value;render()});
-  q.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();q.blur()}});
-  $('#limpar').addEventListener('click',function(){q.value='';estado.q='';render();q.focus()});
   chips.addEventListener('click',function(e){var b=e.target.closest('.chip');if(b)setCat(b.dataset.cat)});
   document.querySelectorAll('.linha .ir').forEach(function(b){
     b.addEventListener('click',function(){
-      q.value='';estado.q='';setCat(b.dataset.cat);
+      setCat(b.dataset.cat);
       $('#encontre').scrollIntoView({behavior:'smooth',block:'start'});
     });
   });
@@ -634,18 +635,48 @@ dialog.ficha[open]::backdrop{animation:some .35s ease}
 
   /* ficha */
   var dlg=$('#ficha'),din=$('#fichaIn'),ultimo=null;
+  var gal={fotos:[],i:0};
+  function mostra(i){
+    var n=gal.fotos.length;gal.i=(i+n)%n;
+    var im=$('.ficha-foto img.f',din);if(!im)return;
+    im.style.opacity=0;
+    var nx=new Image();nx.onload=function(){im.src=nx.src;im.alt=gal.fotos[gal.i][1];im.style.opacity=1};nx.src=gal.fotos[gal.i][0];
+    din.querySelectorAll('.gal-pt').forEach(function(p,k){p.setAttribute('aria-current',k===gal.i)});
+  }
   function abre(id){
     var f=TODOS.filter(function(x){return x.id===id})[0];if(!f)return;
+    gal.fotos=f.fotos||[[f.foto,f.alt]];gal.i=0;
     var topo=f.direto?'<span class="nome-serif">Costa Faria Ribeiro</span>':'<img class="lg" src="'+f.logo+'" alt="Logo '+esc(f.nome)+'">';
-    din.innerHTML='<div class="ficha-foto" style="--lw:'+(f.lw||'70%')+'"><img class="f" src="'+f.foto+'" alt="'+esc(f.alt)+'">'+topo+'</div>'+
+    var nav=gal.fotos.length>1?('<button class="gal-b gal-ant" type="button" aria-label="Foto anterior">‹</button><button class="gal-b gal-prox" type="button" aria-label="Próxima foto">›</button>'+
+      '<div class="gal-pts">'+gal.fotos.map(function(_,k){return '<button class="gal-pt" type="button" data-k="'+k+'" aria-label="Foto '+(k+1)+' de '+gal.fotos.length+'" aria-current="'+(k===0)+'"></button>'}).join('')+'</div>'):'';
+    var pdfs=f.cats_pdf?('<h4>Catálogos</h4><div class="pdfs">'+f.cats_pdf.map(function(c){
+      return '<a class="pdf" href="'+c[1]+'" target="_blank" rel="noopener"><span class="pdf-i" aria-hidden="true">PDF</span><span class="pdf-t"><b>'+esc(c[0])+'</b><small>Abrir catálogo · '+c[2]+'</small></span><span class="pdf-s" aria-hidden="true">↓</span></a>'}).join('')+'</div>'):'';
+    din.innerHTML='<div class="ficha-foto" style="--lw:'+(f.lw||'70%')+'"><img class="f" src="'+gal.fotos[0][0]+'" alt="'+esc(gal.fotos[0][1])+'">'+topo+nav+'</div>'+
       '<div class="ficha-txt"><span class="cat">'+esc(f.cats.join(' · '))+'</span><h3 id="fichaNome">'+esc(f.nome)+'</h3>'+
-      '<p class="desc">'+esc(f.desc)+'</p><h4>Produtos</h4><div class="tags">'+f.prod.map(function(p){return '<span class="tag">'+esc(p)+'</span>'}).join('')+'</div>'+
+      '<p class="desc">'+esc(f.desc)+'</p><h4>Produtos</h4><div class="tags">'+f.prod.map(function(p){return '<span class="tag">'+esc(p)+'</span>'}).join('')+'</div>'+pdfs+
       '<div class="ficha-acoes"><a class="btn btn-tinta" target="_blank" rel="noopener" href="'+zapLink(f)+'">Pedir orçamento</a>'+
       (f.site?'<a class="btn btn-borda" target="_blank" rel="noopener" href="'+f.site+'">Site da fábrica ↗</a>':'')+'</div></div>';
     ultimo=document.activeElement;
     if(dlg.showModal){dlg.showModal()}else{dlg.setAttribute('open','')}
+    din.scrollTop=0;var tx=$('.ficha-txt',din);if(tx)tx.scrollTop=0;
     document.documentElement.style.overflow='hidden';
   }
+  din.addEventListener('click',function(e){
+    if(e.target.closest('.gal-ant'))mostra(gal.i-1);
+    else if(e.target.closest('.gal-prox'))mostra(gal.i+1);
+    else{var p=e.target.closest('.gal-pt');if(p)mostra(+p.dataset.k)}
+  });
+  dlg.addEventListener('keydown',function(e){
+    if(gal.fotos.length<2)return;
+    if(e.key==='ArrowLeft')mostra(gal.i-1);else if(e.key==='ArrowRight')mostra(gal.i+1);
+  });
+  var tx0=null;
+  din.addEventListener('touchstart',function(e){tx0=e.target.closest('.ficha-foto')?e.touches[0].clientX:null},{passive:true});
+  din.addEventListener('touchend',function(e){
+    if(tx0===null||gal.fotos.length<2)return;
+    var dx=e.changedTouches[0].clientX-tx0;tx0=null;
+    if(Math.abs(dx)>40)mostra(gal.i+(dx<0?1:-1));
+  },{passive:true});
   function fecha(){if(dlg.open){dlg.close()}}
   dlg.addEventListener('close',function(){document.documentElement.style.overflow='';if(ultimo&&ultimo.focus)ultimo.focus()});
   dlg.addEventListener('click',function(e){if(e.target===dlg)fecha()});
